@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="min-h-screen bg-gradient-to-b from-blue-900 via-blue-500 to-sky-200 text-white">
+
+  <div class="relative min-h-screen px-6 md:px-12 py-8 flex-col">
+
+    <div class="flex items-center justify-between mb-24">
+        <div class="text-xl font-semibold flex items-center gap-2">
+            <a href="{% url 'landing' %}">
+                Flight Fare Forecast
+            </a>
+        </div>
+    </div>
+
+    <div class="text-center max-w-2xl mx-auto">
+        <p class="text-sm opacity-80 mb-2">Welcome to Flight Fare Forecast</p>
+
+        <h1 class="text-3xl md:text-5xl font-semibold leading-tight mb-6 drop-shadow-lg">
+            Discover the best prices<br />
+            using smart predictions.
+        </h1>
+
+        <div class="mt-4">
+            <a href="{% url 'flights_search' %}" class="bg-sky-400 hover:bg-sky-500 text-white font-semibold px-8 py-3 rounded-full shadow-lg transition-colors inline-block">
+                Find Flights
+            </a>
+        </div>
+    </div>
+
+    <!-- Airplane -->
+    <div class="relative flex justify-center items-center">
+      {% load static %}
+      <img
+        src="{% static 'flights/images/Flight.svg' %}"
+        alt="Airplane"
+        class="w-full max-w-sm md:max-w-md object-contain drop-shadow-2xl"
+      />
+
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute w-72 h-72 border border-white/30 rounded-full left-10 top-10"></div>
+        <div class="absolute w-96 h-96 border border-white/20 rounded-full right-10 bottom-10"></div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
