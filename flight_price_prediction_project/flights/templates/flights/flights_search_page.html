@@ -86,7 +86,7 @@
       </div>
 
       <!-- Airplane Graphic -->
-      <div class="relative flex justify-center items-center mt-16">
+      <!-- <div class="relative flex justify-center items-center mt-16">
         {% load static %}
         <img
           src="{% static 'flights/images/Flight.svg' %}"
@@ -100,6 +100,132 @@
           <div
             class="absolute w-96 h-96 border border-white/20 rounded-full right-10 bottom-10"
           ></div>
+        </div>
+      </div> -->
+      <!-- Flight Results - HARD CODED FOR NOW -->
+      <div class="max-w-5xl mx-auto mt-16 space-y-6">
+        <!-- Result Card 1 -->
+        <div
+          class="bg-white rounded-xl p-6 flex items-center justify-between shadow-lg text-gray-800"
+        >
+          <!-- Airline + Route -->
+          <div class="flex items-center gap-4">
+            <img
+              src="{% static 'flights/images/Flight.svg' %}"
+              alt="Air Canada"
+              class="w-12 h-12 object-contain"
+            />
+
+            <div>
+              <p class="font-semibold text-lg">Air Canada</p>
+              <p class="text-sm text-gray-500">Ottawa (YOW) → Toronto (YYZ)</p>
+
+              <div class="flex gap-4 text-xs text-gray-500 mt-1">
+                <span>✈️ 1h 30m</span>
+                <span>Non-stop</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <p class="text-lg font-semibold">08:30</p>
+            <p class="text-xs text-gray-500">Departure</p>
+          </div>
+
+          <div class="text-center">
+            <p class="text-lg font-semibold">10:00</p>
+            <p class="text-xs text-gray-500">Arrival</p>
+          </div>
+
+          <div class="text-right">
+            <span
+              class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-medium"
+            >
+              Best Price
+            </span>
+            <p class="text-2xl font-bold text-sky-600 mt-2">$199</p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div
+          class="bg-white rounded-xl p-6 flex items-center justify-between shadow-lg text-gray-800"
+        >
+          <div class="flex items-center gap-4">
+            <img
+              src="{% static 'flights/images/Flight.svg' %}"
+              alt="WestJet"
+              class="w-12 h-12 object-contain"
+            />
+
+            <div>
+              <p class="font-semibold text-lg">WestJet</p>
+              <p class="text-sm text-gray-500">Ottawa (YOW) → Calgary (YYC)</p>
+
+              <div class="flex gap-4 text-xs text-gray-500 mt-1">
+                <span>✈️ 2h 30m</span>
+                <span>Non-stop</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <p class="text-lg font-semibold">12:15</p>
+            <p class="text-xs text-gray-500">Departure</p>
+          </div>
+
+          <div class="text-center">
+            <p class="text-lg font-semibold">15:05</p>
+            <p class="text-xs text-gray-500">Arrival</p>
+          </div>
+
+          <div class="text-right">
+            <span
+              class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-medium"
+            >
+              Fastest
+            </span>
+            <p class="text-2xl font-bold text-sky-600 mt-2">$320</p>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div
+          class="bg-white rounded-xl p-6 flex items-center justify-between shadow-lg text-gray-800"
+        >
+          <div class="flex items-center gap-4">
+            <img
+              src="{% static 'flights/images/Flight.svg' %}"
+              alt="Flair Airlines"
+              class="w-12 h-12 object-contain"
+            />
+
+            <div>
+              <p class="font-semibold text-lg">Flair Airlines</p>
+              <p class="text-sm text-gray-500">
+                Toronto (YYZ) → Vancouver (YVR)
+              </p>
+
+              <div class="flex gap-4 text-xs text-gray-500 mt-1">
+                <span>✈️ 5h 45m</span>
+                <span>1 Stop</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center">
+            <p class="text-lg font-semibold">17:45</p>
+            <p class="text-xs text-gray-500">Departure</p>
+          </div>
+
+          <div class="text-center">
+            <p class="text-lg font-semibold">20:30</p>
+            <p class="text-xs text-gray-500">Arrival</p>
+          </div>
+
+          <div class="text-right">
+            <p class="text-2xl font-bold text-sky-600 mt-2">$410</p>
+          </div>
         </div>
       </div>
     </div>
