@@ -2,3 +2,8 @@ venv/
 *.pyc
 __pycache__/
 .env
+
+# API files to ignore
+API/hidden_api.py
+API/venv
+API/__pycache__
