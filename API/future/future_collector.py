@@ -10,28 +10,10 @@ FILE_NAME = "../datasets/future_updated_eda.csv"
 
 # Location metadata
 AIRPORT_DATA = {
-    "YOW": {"city": "Ottawa", "lat": 45.3225, "lon": -75.6692},
-    "YYZ": {"city": "Toronto", "lat": 43.6777, "lon": -79.6248},
-    "YVR": {"city": "Vancouver", "lat": 49.1951, "lon": -123.1779},
-    "YYC": {"city": "Calgary", "lat": 51.1139, "lon": -114.0203}
-}
-
-KNOWN_DISTANCES = {
-    ("YOW", "YVR"): 3552,
-    ("YOW", "YYC"): 2879,
-    ("YOW", "YYZ"): 364,
-
-    ("YVR", "YOW"): 3552,
-    ("YVR", "YYC"): 686,
-    ("YVR", "YYZ"): 3346,
-
-    ("YYC", "YOW"): 2879,
-    ("YYC", "YVR"): 686,
-    ("YYC", "YYZ"): 2689,
-
-    ("YYZ", "YOW"): 364,
-    ("YYZ", "YVR"): 3346,
-    ("YYZ", "YYC"): 2689
+    "YOW": {"city": "Ottawa"},
+    "YYZ": {"city": "Toronto"},
+    "YVR": {"city": "Vancouver"},
+    "YYC": {"city": "Calgary"}
 }
 
 def get_time_period(h):
@@ -71,7 +53,6 @@ def save_flights(origin, destination, departure_date, flights):
 
     query_date = datetime.today().strftime("%Y-%m-%d")
 
-    distance_km = KNOWN_DISTANCES[(origin, destination)]
     file_exists = os.path.exists(FILE_NAME)
 
     with open(FILE_NAME, "a", newline="", encoding="utf-8") as f:
@@ -84,14 +65,14 @@ def save_flights(origin, destination, departure_date, flights):
                 "City",
                 "destination",
                 "City_destination",
-                "distance_km",
                 "Name_airline",
                 "query_date",
                 "departure_date",
                 "departure_clock_time",
                 "day_of_week_departure",
+                "month_departure",
                 "arrival_date",
-                "arrival_clock_time"
+                "arrival_clock_time",
                 "days_until_departure",
                 "trip_duration_minutes",
                 "number_of_stops",
@@ -110,7 +91,6 @@ def save_flights(origin, destination, departure_date, flights):
             last = segments[-1]
 
             airline = first.get("airline", "")
-            aircraft = first.get("aircraft", "")
 
             dep_time = first["departure_airport"]["time"]
             arr_time = last["arrival_airport"]["time"]
@@ -130,7 +110,6 @@ def save_flights(origin, destination, departure_date, flights):
                 AIRPORT_DATA[origin]["city"],
                 destination,
                 AIRPORT_DATA[destination]["city"],
-                distance_km,
                 airline,
                 query_date,
                 dep_dt.date(),

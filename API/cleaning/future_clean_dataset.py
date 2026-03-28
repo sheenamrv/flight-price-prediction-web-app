@@ -6,7 +6,8 @@ OUTPUT_FILE = "../datasets/future_updated_eda.csv"
 DROP_AIRLINES = [
     "Air North Yukon's Airline",
     "Central Mountain Air LTD",
-    "Pacific Coastal Airline Limited"
+    "Pacific Coastal Airlines Limited",
+    "Air Transat"
 ]
 
 RENAME_AIRLINES = {
@@ -40,6 +41,9 @@ def clean_dataset():
     if "aircraft" in df.columns:
         df = df.drop(columns=["aircraft"])
 
+    if "distance_km" in df.columns:
+        df = df.drop(columns=["distance_km"])
+        
     df.to_csv(OUTPUT_FILE, index=False)
 
     print("Clean EDA dataset saved!")
