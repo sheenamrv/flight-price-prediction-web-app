@@ -41,6 +41,9 @@ def clean_dataset():
     if "aircraft" in df.columns:
         df = df.drop(columns=["aircraft"])
 
+    if "distance_km" in df.columns:
+        df = df.drop(columns=["distance_km"])
+
     df.to_csv(OUTPUT_FILE, index=False)
 
     print("Clean EDA dataset saved!")

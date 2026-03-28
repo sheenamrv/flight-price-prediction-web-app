@@ -17,23 +17,6 @@ AIRPORT_DATA = {
     "YYC": {"city": "Calgary", "lat": 51.1139, "lon": -114.0203}
 }
 
-KNOWN_DISTANCES = {
-    ("YOW", "YVR"): 3552,
-    ("YOW", "YYC"): 2879,
-    ("YOW", "YYZ"): 364,
-
-    ("YVR", "YOW"): 3552,
-    ("YVR", "YYC"): 686,
-    ("YVR", "YYZ"): 3346,
-
-    ("YYC", "YOW"): 2879,
-    ("YYC", "YVR"): 686,
-    ("YYC", "YYZ"): 2689,
-
-    ("YYZ", "YOW"): 364,
-    ("YYZ", "YVR"): 3346,
-    ("YYZ", "YYC"): 2689
-}
 
 def get_time_period(h):
     if 0 <= h < 5:
@@ -72,7 +55,6 @@ def save_flights(origin, destination, departure_date, flights):
 
     query_date = datetime.today().strftime("%Y-%m-%d")
 
-    distance_km = KNOWN_DISTANCES[(origin, destination)]
     file_exists = os.path.exists(FILE_NAME)
 
     with open(FILE_NAME, "a", newline="", encoding="utf-8") as f:
@@ -85,7 +67,6 @@ def save_flights(origin, destination, departure_date, flights):
                 "City",
                 "destination",
                 "City_destination",
-                "distance_km",
                 "Name_airline",
                 "query_date",
                 "departure_date",
@@ -111,7 +92,6 @@ def save_flights(origin, destination, departure_date, flights):
             last = segments[-1]
 
             airline = first.get("airline", "")
-            aircraft = first.get("aircraft", "")
 
             dep_time = first["departure_airport"]["time"]
             arr_time = last["arrival_airport"]["time"]
@@ -131,7 +111,6 @@ def save_flights(origin, destination, departure_date, flights):
                 AIRPORT_DATA[origin]["city"],
                 destination,
                 AIRPORT_DATA[destination]["city"],
-                distance_km,
                 airline,
                 query_date,
                 dep_dt.date(),

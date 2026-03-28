@@ -1,5 +1,6 @@
 from future_collector import request_flights, save_flights
 from future_analytics import get_live_analytics, get_hist_analytics
+# from predict_price import predict_prices
 
 origin = input("Origin airport: ").upper()
 destination = input("Destination airport: ").upper()
@@ -7,6 +8,11 @@ departure_date = input("Departure date (YYYY-MM-DD): ")
 
 # Collect new API data
 flights = request_flights(origin, destination, departure_date)
+
+for flight in flights:
+    flight["origin"] = origin
+    flight["destination"] = destination
+    flight["departure_date"] = departure_date
 
 # Get Analytics of live data
 live_stats = get_live_analytics(flights)
