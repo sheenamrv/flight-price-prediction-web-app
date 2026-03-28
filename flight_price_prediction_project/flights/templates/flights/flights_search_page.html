@@ -1,3 +1,4 @@
+{% load static %}
 <!doctype html>
 <html lang="en">
   <head>
@@ -32,10 +33,17 @@
       <div
         class="max-w-5xl mx-auto bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-lg"
       >
-        <form action="#" class="grid gap-6 md:grid-cols-5 items-end">
+        <form method="POST" class="grid gap-6 md:grid-cols-4 items-end">
+          {% csrf_token %}
+
           <div class="flex flex-col">
             <label class="mb-1 text-sm font-medium">Origin</label>
-            <select name="origin" class="rounded-lg px-3 py-2 text-black">
+            <select
+              id="origin"
+              name="origin"
+              class="rounded-lg px-3 py-2 text-black"
+              required
+            >
               <option value="">Select Origin</option>
               <option value="YOW">Ottawa (YOW)</option>
               <option value="YYZ">Toronto (YYZ)</option>
@@ -46,7 +54,12 @@
 
           <div class="flex flex-col">
             <label class="mb-1 text-sm font-medium">Destination</label>
-            <select name="destination" class="rounded-lg px-3 py-2 text-black">
+            <select
+              id="destination"
+              name="destination"
+              class="rounded-lg px-3 py-2 text-black"
+              required
+            >
               <option value="">Select Destination</option>
               <option value="YOW">Ottawa (YOW)</option>
               <option value="YYZ">Toronto (YYZ)</option>
@@ -56,20 +69,13 @@
           </div>
 
           <div class="flex flex-col">
-            <label class="mb-1 text-sm font-medium">From</label>
+            <label class="mb-1 text-sm font-medium">Departure Date</label>
             <input
+              id="departure_date"
               type="date"
-              name="from_date"
+              name="departure_date"
               class="rounded-lg px-3 py-2 text-black"
-            />
-          </div>
-
-          <div class="flex flex-col">
-            <label class="mb-1 text-sm font-medium">To</label>
-            <input
-              type="date"
-              name="to_date"
-              class="rounded-lg px-3 py-2 text-black"
+              required
             />
           </div>
 
@@ -84,6 +90,27 @@
           </div>
         </form>
       </div>
+
+      {% if error %}
+      <div
+        class="max-w-5xl mx-auto mt-8 bg-red-100 text-red-700 px-4 py-3 rounded-lg shadow-lg"
+      >
+        {{ error }}
+      </div>
+      {% endif %} {% if predicted_price %}
+      <div class="max-w-5xl mx-auto mt-10">
+        <div
+          class="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-lg text-center"
+        >
+          <p class="text-sm uppercase tracking-wide opacity-80 mb-2">
+            Predicted Price
+          </p>
+          <p class="text-4xl md:text-5xl font-bold">
+            ${{ predicted_price|floatformat:2 }}
+          </p>
+        </div>
+      </div>
+      {% endif %}
 
       <!-- Airplane Graphic -->
       <!-- <div class="relative flex justify-center items-center mt-16">
@@ -102,9 +129,12 @@
           ></div>
         </div>
       </div> -->
-      <!-- Flight Results - HARD CODED FOR NOW -->
+
+      <!-- Flight Results -->
       <div class="max-w-5xl mx-auto mt-16 space-y-6">
-        <!-- Result Card 1 -->
+        {% if results %} {% for flight in results %}
+
+        <!-- Result Cards-->
         <div
           class="bg-white rounded-xl p-6 flex items-center justify-between shadow-lg text-gray-800"
         >
@@ -112,122 +142,93 @@
           <div class="flex items-center gap-4">
             <img
               src="{% static 'flights/images/Flight.svg' %}"
-              alt="Air Canada"
+              alt="{{ flight.airline }}"
               class="w-12 h-12 object-contain"
             />
 
             <div>
-              <p class="font-semibold text-lg">Air Canada</p>
-              <p class="text-sm text-gray-500">Ottawa (YOW) → Toronto (YYZ)</p>
-
-              <div class="flex gap-4 text-xs text-gray-500 mt-1">
-                <span>✈️ 1h 30m</span>
-                <span>Non-stop</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="text-center">
-            <p class="text-lg font-semibold">08:30</p>
-            <p class="text-xs text-gray-500">Departure</p>
-          </div>
-
-          <div class="text-center">
-            <p class="text-lg font-semibold">10:00</p>
-            <p class="text-xs text-gray-500">Arrival</p>
-          </div>
-
-          <div class="text-right">
-            <span
-              class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-medium"
-            >
-              Best Price
-            </span>
-            <p class="text-2xl font-bold text-sky-600 mt-2">$199</p>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div
-          class="bg-white rounded-xl p-6 flex items-center justify-between shadow-lg text-gray-800"
-        >
-          <div class="flex items-center gap-4">
-            <img
-              src="{% static 'flights/images/Flight.svg' %}"
-              alt="WestJet"
-              class="w-12 h-12 object-contain"
-            />
-
-            <div>
-              <p class="font-semibold text-lg">WestJet</p>
-              <p class="text-sm text-gray-500">Ottawa (YOW) → Calgary (YYC)</p>
-
-              <div class="flex gap-4 text-xs text-gray-500 mt-1">
-                <span>✈️ 2h 30m</span>
-                <span>Non-stop</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="text-center">
-            <p class="text-lg font-semibold">12:15</p>
-            <p class="text-xs text-gray-500">Departure</p>
-          </div>
-
-          <div class="text-center">
-            <p class="text-lg font-semibold">15:05</p>
-            <p class="text-xs text-gray-500">Arrival</p>
-          </div>
-
-          <div class="text-right">
-            <span
-              class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-medium"
-            >
-              Fastest
-            </span>
-            <p class="text-2xl font-bold text-sky-600 mt-2">$320</p>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div
-          class="bg-white rounded-xl p-6 flex items-center justify-between shadow-lg text-gray-800"
-        >
-          <div class="flex items-center gap-4">
-            <img
-              src="{% static 'flights/images/Flight.svg' %}"
-              alt="Flair Airlines"
-              class="w-12 h-12 object-contain"
-            />
-
-            <div>
-              <p class="font-semibold text-lg">Flair Airlines</p>
+              <p class="font-semibold text-lg">{{ flight.airline }}</p>
               <p class="text-sm text-gray-500">
-                Toronto (YYZ) → Vancouver (YVR)
+                {{ flight.origin }} → {{ flight.destination }}
               </p>
 
               <div class="flex gap-4 text-xs text-gray-500 mt-1">
-                <span>✈️ 5h 45m</span>
-                <span>1 Stop</span>
+                <span>⏱️ {{ flight.duration_label }}</span>
+                <span>{{ flight.stops_label }}</span>
               </div>
             </div>
           </div>
 
           <div class="text-center">
-            <p class="text-lg font-semibold">17:45</p>
+            <p class="text-lg font-semibold">{{ flight.departure_time }}</p>
             <p class="text-xs text-gray-500">Departure</p>
           </div>
 
           <div class="text-center">
-            <p class="text-lg font-semibold">20:30</p>
+            <p class="text-lg font-semibold">{{ flight.arrival_time }}</p>
             <p class="text-xs text-gray-500">Arrival</p>
           </div>
 
           <div class="text-right">
-            <p class="text-2xl font-bold text-sky-600 mt-2">$410</p>
+            {% if flight.api_price %}
+            <span
+              class="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-full font-medium"
+            >
+              Live Price
+            </span>
+            <p class="text-2xl font-bold text-sky-600 mt-2">
+              ${{ flight.api_price }}
+            </p>
+            {% else %}
+            <p class="text-2xl font-bold text-sky-600 mt-2">N/A</p>
+            {% endif %}
           </div>
         </div>
+
+        {% endfor %} {% endif %}
       </div>
     </div>
+
+    <script>
+      const originSelect = document.getElementById("origin");
+      const destinationSelect = document.getElementById("destination");
+      const departureDateInput = document.getElementById("departure_date");
+
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, "0");
+      const dd = String(today.getDate()).padStart(2, "0");
+      const todayString = `${yyyy}-${mm}-${dd}`;
+
+      departureDateInput.min = todayString;
+
+      function syncAirportOptions(sourceSelect, targetSelect) {
+        const selectedValue = sourceSelect.value;
+
+        Array.from(targetSelect.options).forEach((option) => {
+          if (!option.value) {
+            option.disabled = false;
+            return;
+          }
+
+          option.disabled = option.value === selectedValue;
+        });
+
+        if (targetSelect.value === selectedValue) {
+          targetSelect.value = "";
+        }
+      }
+
+      originSelect.addEventListener("change", () => {
+        syncAirportOptions(originSelect, destinationSelect);
+      });
+
+      destinationSelect.addEventListener("change", () => {
+        syncAirportOptions(destinationSelect, originSelect);
+      });
+
+      syncAirportOptions(originSelect, destinationSelect);
+      syncAirportOptions(destinationSelect, originSelect);
+    </script>
   </body>
 </html>

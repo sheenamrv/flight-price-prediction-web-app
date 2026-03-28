@@ -1,0 +1,9 @@
+origin,City,destination,City_destination,distance_km,Name_airline,query_date,departure_date,departure_clock_time,day_of_week_departure,arrival_date,arrival_clock_timedays_until_departure,trip_duration_minutes,number_of_stops,base_price,departure_hour,arrival_hour,departure_time_period,arrival_time_period
+YOW,Ottawa,YYC,Calgary,2879,Air Canada,2026-03-28,2026-05-02,18:20:00,Saturday,5,2026-05-02,20:51:00,35,271,0,252,18,20,Evening,Evening
+YOW,Ottawa,YYC,Calgary,2879,WestJet,2026-03-28,2026-05-02,07:20:00,Saturday,5,2026-05-02,09:50:00,35,270,0,261,7,9,Early Morning,Morning
+YOW,Ottawa,YYC,Calgary,2879,WestJet,2026-03-28,2026-05-02,13:20:00,Saturday,5,2026-05-02,15:50:00,35,270,0,261,13,15,Afternoon,Afternoon
+YOW,Ottawa,YYC,Calgary,2879,WestJet,2026-03-28,2026-05-02,16:15:00,Saturday,5,2026-05-02,18:45:00,35,270,0,261,16,18,Afternoon,Evening
+YOW,Ottawa,YYC,Calgary,2879,Porter Airlines,2026-03-28,2026-05-02,14:00:00,Saturday,5,2026-05-02,16:30:00,35,270,0,288,14,16,Afternoon,Afternoon
+YOW,Ottawa,YYC,Calgary,2879,Air Canada,2026-03-28,2026-05-02,05:05:00,Saturday,5,2026-05-02,10:30:00,35,445,1,252,5,10,Early Morning,Morning
+YOW,Ottawa,YYC,Calgary,2879,Air Canada,2026-03-28,2026-05-02,06:00:00,Saturday,5,2026-05-02,10:44:00,35,404,1,256,6,10,Early Morning,Morning
+YOW,Ottawa,YYC,Calgary,2879,Air Canada,2026-03-28,2026-05-02,09:05:00,Saturday,5,2026-05-02,15:59:00,35,534,1,256,9,15,Morning,Afternoon
