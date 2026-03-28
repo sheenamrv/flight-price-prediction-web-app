@@ -43,7 +43,15 @@ def clean_dataset():
 
     if "distance_km" in df.columns:
         df = df.drop(columns=["distance_km"])
-        
+    
+    df['query_date'] = pd.to_datetime(df['query_date'])
+    target_date = pd.to_datetime('2026-03-08')
+
+    df['base_price'] = pd.to_numeric(df["base_price"], errors='coerce').astype(float)
+    
+    df.loc[df['query_date'] == target_date, 'base_price'] *= 1.5755
+    df['base_price'] = df['base_price'].round().astype(int)
+
     df.to_csv(OUTPUT_FILE, index=False)
 
     print("Clean EDA dataset saved!")

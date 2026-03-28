@@ -11,3 +11,6 @@ API/future/hidden_api.py
 
 # Website API
 flight_price_prediction_project/flight_price_prediction_project/API/hidden_api.py
+
+# Project
+flight_price_prediction_project/API/hidden_api.py
