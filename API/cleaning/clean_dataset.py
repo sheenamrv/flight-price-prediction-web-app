@@ -1,12 +1,13 @@
 import pandas as pd
 
-INPUT_FILE = "../model_building/flights_eda_df.csv"
+INPUT_FILE = "../../model_building/flights_eda_df.csv"
 OUTPUT_FILE = "../datasets/updated_eda.csv"
 
 DROP_AIRLINES = [
     "Air North Yukon's Airline",
     "Central Mountain Air LTD",
-    "Pacific Coastal Airline Limited"
+    "Pacific Coastal Airlines Limited",
+    "Air Transat"
 ]
 
 RENAME_AIRLINES = {
