@@ -190,7 +190,7 @@ def flights_search_page(request):
                         origin=origin,
                         destination=destination,
                         departure_date=departure_date_obj,
-                        predicted_price=round(predicted_price, 2) if predicted_price is not None else None,
+                        predicted_price=round(first_predicted_price, 2) if first_predicted_price is not None else None,
                         average_live_price=round(avg_live, 2) if avg_live is not None else None,
                     )
 
