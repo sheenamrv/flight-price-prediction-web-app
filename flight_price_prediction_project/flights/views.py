@@ -9,6 +9,7 @@ sys.path.append(str(BASE_DIR))
 from API.collector import request_flights, get_time_period
 from API.analytics import get_live_analytics, get_hist_analytics
 from .machine_learning.predictor import predict_price
+from .models import SearchRecord
 
 
 def build_pipeline_input(origin, destination, flight):
@@ -166,6 +167,15 @@ def flights_search_page(request):
                                 elif current_price > historical_avg:
                                     suggestion_message += f" It is above the historical average of ${historical_avg:.2f}."
 
+                    # added to get average live price for the search record
+                    avg_live = live_stats.get("average_price") if live_stats else None
+                    SearchRecord.objects.create(
+                        origin=origin,
+                        destination=destination,
+                        departure_date=departure_date_obj,
+                        predicted_price=round(predicted_price, 2) if predicted_price is not None else None,
+                        average_live_price=round(avg_live, 2) if avg_live is not None else None,
+                    )
 
                     for flight in flights:
                         card = collect_result_data(
