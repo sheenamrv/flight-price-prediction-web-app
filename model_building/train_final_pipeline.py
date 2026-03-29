@@ -14,6 +14,8 @@ df = pd.read_csv("../model_building/flights_eda_df.csv")
 # Feature Engineering
 df["is_weekend_departure"] = df["day_of_week_departure"].isin(["Saturday", "Sunday"]).astype(int)
 
+df["route"] = df["origin"] + '-' + df["destination"]
+
 df["season"] = df["month_departure"].apply(
     lambda m: (
         "Winter" if m in [12, 1, 2]
@@ -47,12 +49,12 @@ df["season"] = df["month_departure"].apply(
 
 # Features
 features = [
-    "origin", "destination", "distance_km", "Name_airline",
+    "origin", "destination", "Name_airline",
     "day_of_week_departure", "days_until_departure",
     "trip_duration_minutes", "number_of_stops",
     "departure_hour", "arrival_hour",
     "departure_time_period", "arrival_time_period",
-    "is_weekend_departure", "season"
+    "is_weekend_departure", "season", "route"
     # "days_until_departure_group","airline_route","distance_bin"
 ]
 
@@ -64,12 +66,12 @@ y = df[target]
 categorical = [
     "origin", "destination", "Name_airline",
     "day_of_week_departure", "departure_time_period",
-    "arrival_time_period", "season"
+    "arrival_time_period", "season", "route"
     # "days_until_departure_group", "distance_bin", "airline_route"
 ]
 
 numeric = [
-    "distance_km", "days_until_departure",
+    "days_until_departure",
     "trip_duration_minutes", "number_of_stops",
     "departure_hour", "arrival_hour",
     "is_weekend_departure"
