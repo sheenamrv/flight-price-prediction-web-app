@@ -11,12 +11,11 @@ FILE_NAME = "datasets/updated_eda.csv"
 
 # Location metadata
 AIRPORT_DATA = {
-    "YOW": {"city": "Ottawa", "lat": 45.3225, "lon": -75.6692},
-    "YYZ": {"city": "Toronto", "lat": 43.6777, "lon": -79.6248},
-    "YVR": {"city": "Vancouver", "lat": 49.1951, "lon": -123.1779},
-    "YYC": {"city": "Calgary", "lat": 51.1139, "lon": -114.0203}
+    "YOW": {"city": "Ottawa"},
+    "YYZ": {"city": "Toronto"},
+    "YVR": {"city": "Vancouver"},
+    "YYC": {"city": "Calgary"}
 }
-
 
 def get_time_period(h):
     if 0 <= h < 5:
