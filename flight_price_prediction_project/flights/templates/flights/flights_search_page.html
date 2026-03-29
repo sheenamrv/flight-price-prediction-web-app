@@ -33,7 +33,11 @@
       <div
         class="max-w-5xl mx-auto bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-lg"
       >
-        <form method="POST" class="grid gap-6 md:grid-cols-4 items-end">
+        <form
+          id="form"
+          method="POST"
+          class="grid gap-6 md:grid-cols-4 items-end"
+        >
           {% csrf_token %}
 
           <div class="flex flex-col">
@@ -91,6 +95,7 @@
         </form>
       </div>
 
+      <!-- Errors -->
       {% if error %}
       <div
         class="max-w-5xl mx-auto mt-8 bg-red-100 text-red-700 px-4 py-3 rounded-lg shadow-lg"
@@ -112,6 +117,52 @@
       </div>
       {% endif %}
 
+      <!-- Stats -->
+      {% if live_stats or hist_stats %}
+      <div class="max-w-5xl mx-auto mt-10 grid md:grid-cols-2 gap-6">
+        {% if live_stats %}
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg">
+          <h2 class="text-xl font-semibold mb-4">Live Analytics</h2>
+          <p>
+            <b>Lowest Price:</b> {% if live_stats.lowest_price is not None %}
+            ${{live_stats.lowest_price}} {% else %} N/A {% endif %}
+          </p>
+          <p>
+            <b>Highest Price:</b> {% if live_stats.highest_price is not None %}
+            ${{live_stats.highest_price}} {% else %} N/A {% endif %}
+          </p>
+          <p>
+            <b>Average Price:</b> {% if live_stats.average_price is not None %}
+            ${{live_stats.average_price|floatformat:2}} {% else %} N/A {%endif%}
+          </p>
+          <p><b>Total Results:</b> {{live_stats.total_records}}</p>
+        </div>
+        {% endif %} {% if hist_stats %}
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg">
+          <h2 class="text-xl font-semibold">Historical Analytics</h2>
+          <p class="mb-4">(Based on all recorded route prices)</p>
+
+          <p>
+            <b>Lowest Price:</b> {% if hist_stats.lowest_price is not None %}
+            ${{hist_stats.lowest_price}} {% else %} N/A {% endif %}
+          </p>
+          <p>
+            <b>Highest Price:</b> {% if hist_stats.highest_price is not None %}
+            ${{hist_stats.highest_price}} {% else %} N/A {% endif %}
+          </p>
+          <p>
+            <b>Average Price:</b> {% if hist_stats.average_price is not None %}
+            ${{hist_stats.average_price|floatformat:2}} {% else %} N/A {%endif%}
+          </p>
+          <!-- May need for later use -->
+          <!-- <p>Total Records: {{hist_stats.total_records}}</p>
+          <p>Filtered Records: {{hist_stats.filtered_records}}</p> -->
+        </div>
+        {% endif %}
+      </div>
+      {% endif %}
+      <!--  -->
+
       <!-- Airplane Graphic -->
       <!-- <div class="relative flex justify-center items-center mt-16">
         {% load static %}
@@ -131,6 +182,9 @@
       </div> -->
 
       <!-- Flight Results -->
+      <p id="loadingMessage" class="text-center mt-6 hidden font-semibold">
+        Loading...
+      </p>
       <div class="max-w-5xl mx-auto mt-16 space-y-6">
         {% if results %} {% for flight in results %}
 
@@ -199,6 +253,8 @@
       const mm = String(today.getMonth() + 1).padStart(2, "0");
       const dd = String(today.getDate()).padStart(2, "0");
       const todayString = `${yyyy}-${mm}-${dd}`;
+      const form = document.getElementById("form");
+      const loadingMessage = document.getElementById("loadingMessage");
 
       departureDateInput.min = todayString;
 
@@ -229,6 +285,10 @@
 
       syncAirportOptions(originSelect, destinationSelect);
       syncAirportOptions(destinationSelect, originSelect);
+
+      form.addEventListener("submit", () => {
+        loadingMessage.classList.remove("hidden");
+      });
     </script>
   </body>
 </html>

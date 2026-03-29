@@ -7,6 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
 
 from API.collector import request_flights, get_time_period
+from API.analytics import get_live_analytics, get_hist_analytics
 from .machine_learning.predictor import predict_price
 
 
@@ -100,6 +101,8 @@ def flights_search_page(request):
     results = []
     predicted_price = None
     error = None
+    live_stats = None
+    hist_stats = None
 
     if request.method == "POST":
         origin = (request.POST.get("origin") or "").strip().upper()
@@ -118,6 +121,9 @@ def flights_search_page(request):
                     error = "Departure date cannot be before today."
                 else:
                     flights = request_flights(origin, destination, departure_date)
+
+                    live_stats = get_live_analytics(flights)
+                    hist_stats = get_hist_analytics(origin, destination)
 
                     if flights:
                         first_flight = flights[0]
@@ -146,6 +152,8 @@ def flights_search_page(request):
         {
             "results": results,
             "predicted_price": predicted_price,
+            "live_stats": live_stats,
+            "hist_stats": hist_stats,
             "error": error,
         },
     )

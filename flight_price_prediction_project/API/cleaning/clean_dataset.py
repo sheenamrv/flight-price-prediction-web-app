@@ -1,6 +1,6 @@
 import pandas as pd
 
-INPUT_FILE = "../../model_building/flights_eda_df.csv"
+INPUT_FILE = "../../../../model_building/flights_eda_df.csv"
 OUTPUT_FILE = "../datasets/updated_eda.csv"
 
 DROP_AIRLINES = [
@@ -40,6 +40,18 @@ def clean_dataset():
 
     if "aircraft" in df.columns:
         df = df.drop(columns=["aircraft"])
+
+    if "distance_km" in df.columns:
+        df = df.drop(columns=["distance_km"])
+    
+    df['query_date'] = pd.to_datetime(df['query_date'])
+    target_date = pd.to_datetime('2026-03-08')
+
+    df['base_price'] = pd.to_numeric(df["base_price"], errors='coerce').astype(float)
+    
+    df.loc[df['query_date'] == target_date, 'base_price'] *= 1.5755
+    df['base_price'] = df['base_price'].round().astype(int)
+
 
     df.to_csv(OUTPUT_FILE, index=False)
 
