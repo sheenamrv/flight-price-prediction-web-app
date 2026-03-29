@@ -121,7 +121,8 @@ grid_search = GridSearchCV(
     estimator=pipeline,
     param_grid=cv_params,
     cv=5,
-    scoring="r2",
+    scoring="neg_mean_absolute_error",
+    refit=True,
     n_jobs=-1,
     verbose=1
 )

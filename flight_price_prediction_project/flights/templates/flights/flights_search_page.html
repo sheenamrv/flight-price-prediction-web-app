@@ -122,7 +122,7 @@
       <div class="max-w-5xl mx-auto mt-10 grid md:grid-cols-2 gap-6">
         {% if live_stats %}
         <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold mb-4">Live Analytics</h2>
+          <h2 class="text-xl font-semibold mb-4">Live Analytics {{origin}} → {{destination}}<h2>
           <p>
             <b>Lowest Price:</b> {% if live_stats.lowest_price is not None %}
             ${{live_stats.lowest_price}} {% else %} N/A {% endif %}
@@ -139,7 +139,7 @@
         </div>
         {% endif %} {% if hist_stats %}
         <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg">
-          <h2 class="text-xl font-semibold">Historical Analytics</h2>
+          <h2 class="text-xl font-semibold">Historical Analytics {{origin}} → {{destination}}</h2>
           <p class="mb-4">(Based on all recorded route prices)</p>
 
           <p>
