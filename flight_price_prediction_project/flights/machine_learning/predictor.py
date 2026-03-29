@@ -51,11 +51,12 @@ def get_season(month: int) -> str:
 #         return "3001-3500 km"
 #     return "3500+ km"
 
-def predict_price(origin: str, destination: str, name_airline: str, departure_date, distance_km: float, days_until_departure: int, trip_duration_minutes: int, number_of_stops: int, departure_hour: int, arrival_hour: int, departure_time_period: str, arrival_time_period: str) -> float:
+def predict_price(origin: str, destination: str, name_airline: str, departure_date, days_until_departure: int, trip_duration_minutes: int, number_of_stops: int, departure_hour: int, arrival_hour: int, departure_time_period: str, arrival_time_period: str) -> float:
     
     # Prep data 
     origin = origin.upper().strip()
     destination = destination.upper().strip()
+    route = f"{origin}-{destination}"
     name_airline = name_airline.strip()
 
     # Convert date if needed
@@ -72,7 +73,7 @@ def predict_price(origin: str, destination: str, name_airline: str, departure_da
     input_df = pd.DataFrame([{
         "origin": origin,
         "destination": destination,
-        "distance_km": float(distance_km),
+        "route": route,
         "Name_airline": name_airline,
         "day_of_week_departure": day_of_week_departure,
         "days_until_departure": int(days_until_departure),

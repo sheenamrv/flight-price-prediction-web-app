@@ -2,11 +2,14 @@ import sys
 from pathlib import Path
 from django.shortcuts import render
 from datetime import datetime, date
-from API.collector import request_flights, get_time_period, KNOWN_DISTANCES
-from .machine_learning.predictor import predict_price
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(BASE_DIR))
+
+from API.collector import request_flights, get_time_period
+from API.analytics import get_live_analytics, get_hist_analytics
+from .machine_learning.predictor import predict_price
+
 
 def build_pipeline_input(origin, destination, flight):
     segments = flight.get("flights", [])
@@ -25,16 +28,11 @@ def build_pipeline_input(origin, destination, flight):
     dep_dt = datetime.fromisoformat(dep_time)
     arr_dt = datetime.fromisoformat(arr_time)
 
-    distance_km = KNOWN_DISTANCES.get((origin, destination))
-    if distance_km is None:
-        return None
-
     return {
         "origin": origin,
         "destination": destination,
         "name_airline": first.get("airline", ""),
         "departure_date": dep_dt.date(),
-        "distance_km": distance_km,
         "days_until_departure": max((dep_dt.date() - date.today()).days, 0),
         "trip_duration_minutes": int(flight.get("total_duration", 0) or 0),
         "number_of_stops": max(len(segments) - 1, 0),
@@ -43,6 +41,7 @@ def build_pipeline_input(origin, destination, flight):
         "departure_time_period": get_time_period(dep_dt.hour),
         "arrival_time_period": get_time_period(arr_dt.hour),
     }
+
 
 def collect_result_data(origin, destination, flight, predicted_price=None):
     segments = flight.get("flights", [])
@@ -90,16 +89,20 @@ def collect_result_data(origin, destination, flight, predicted_price=None):
         "predicted_price": predicted_price,
     }
 
+
 # PAGES
 # For landing/home page
 def landing_page(request):
     return render(request, "flights/landing_page.html")
+
 
 # For flights search page
 def flights_search_page(request):
     results = []
     predicted_price = None
     error = None
+    live_stats = None
+    hist_stats = None
 
     if request.method == "POST":
         origin = (request.POST.get("origin") or "").strip().upper()
@@ -112,25 +115,34 @@ def flights_search_page(request):
             error = "Origin and destination must be different."
         else:
             try:
-                flights = request_flights(origin, destination, departure_date)
+                departure_date_obj = datetime.strptime(departure_date, "%Y-%m-%d").date()
 
-                if flights:
-                    first_flight = flights[0]
-                    model_input = build_pipeline_input(origin, destination, first_flight)
+                if departure_date_obj < date.today():
+                    error = "Departure date cannot be before today."
+                else:
+                    flights = request_flights(origin, destination, departure_date)
 
-                    if model_input:
-                        predicted_price = predict_price(**model_input)
+                    live_stats = get_live_analytics(flights)
+                    hist_stats = get_hist_analytics(origin, destination)
 
-                for index, flight in enumerate(flights):
-                    card = collect_result_data(
-                        origin = origin,
-                        destination = destination,
-                        flight = flight,
-                        predicted_price = predicted_price if index == 0 else None,
-                    )
-                    if card:
-                        results.append(card)
+                    if flights:
+                        first_flight = flights[0]
+                        model_input = build_pipeline_input(origin, destination, first_flight)
 
+                        if model_input:
+                            predicted_price = predict_price(**model_input)
+
+                    for flight in flights:
+                        card = collect_result_data(
+                            origin=origin,
+                            destination=destination,
+                            flight=flight,
+                        )
+                        if card:
+                            results.append(card)
+
+            except ValueError:
+                error = "Please enter a valid departure date."
             except Exception as e:
                 error = str(e)
 
@@ -140,7 +152,8 @@ def flights_search_page(request):
         {
             "results": results,
             "predicted_price": predicted_price,
+            "live_stats": live_stats,
+            "hist_stats": hist_stats,
             "error": error,
         },
     )
-    

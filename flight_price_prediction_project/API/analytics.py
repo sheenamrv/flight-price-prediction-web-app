@@ -1,6 +1,10 @@
 import pandas as pd
+from pathlib import Path
 
-FILE_NAME = "datasets/updated_eda.csv"
+# BASE_DIR = Path(__file__).resolve().parent
+# FILE_NAME = BASE_DIR / "datasets" / "updated_eda.csv"
+# FILE_NAME = Path("datasets/updated_eda.csv")
+FILE_NAME = Path(__file__).resolve().parent / "datasets" / "updated_eda.csv"
 
 def get_live_analytics(flights):
 
@@ -31,6 +35,9 @@ def get_live_analytics(flights):
 
 def get_hist_analytics(origin, destination):
 
+    if not FILE_NAME.exists():
+        raise FileNotFoundError(f"CSV not found at: {FILE_NAME}")
+
     df = pd.read_csv(FILE_NAME)
 
     route_df = df[
@@ -47,9 +54,9 @@ def get_hist_analytics(origin, destination):
         }
     
     analytics = {
-        "lowest_price": df["base_price"].min(),
-        "highest_price": df["base_price"].max(),
-        "average_price": df["base_price"].mean(),
+        "lowest_price": route_df["base_price"].min(),
+        "highest_price": route_df["base_price"].max(),
+        "average_price": route_df["base_price"].mean(),
         "total_records": len(df),
         "filtered_records": len(route_df)
     }
