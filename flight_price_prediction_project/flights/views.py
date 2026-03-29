@@ -10,7 +10,10 @@ from API.collector import request_flights, get_time_period
 from API.analytics import get_live_analytics, get_hist_analytics
 from .machine_learning.predictor import predict_price
 
+# TO DO : Store MAE with model and add in predictor.py
+MODEL_MAE = 36.6
 
+# Build the ML model input
 def build_pipeline_input(origin, destination, flight):
     segments = flight.get("flights", [])
     if not segments:
@@ -42,7 +45,7 @@ def build_pipeline_input(origin, destination, flight):
         "arrival_time_period": get_time_period(arr_dt.hour),
     }
 
-
+# Build the UI display data
 def collect_result_data(origin, destination, flight, predicted_price=None):
     segments = flight.get("flights", [])
     if not segments:
@@ -89,7 +92,6 @@ def collect_result_data(origin, destination, flight, predicted_price=None):
         "predicted_price": predicted_price,
     }
 
-
 # PAGES
 # For landing/home page
 def landing_page(request):
@@ -99,13 +101,14 @@ def landing_page(request):
 # For flights search page
 def flights_search_page(request):
     results = []
-    predicted_price = None
+    first_predicted_price = None
     error = None
     live_stats = None
     hist_stats = None
     origin = None
     destination = None
     suggestion_message = None
+
 
     if request.method == "POST":
         origin = (request.POST.get("origin") or "").strip().upper()
@@ -128,53 +131,67 @@ def flights_search_page(request):
                     live_stats = get_live_analytics(flights)
                     hist_stats = get_hist_analytics(origin, destination)
 
-                    if flights:
-                        first_flight = flights[0]
-                        model_input = build_pipeline_input(origin, destination, first_flight)
+                    # if flights:
+                    #     first_flight = flights[0]
+                    #     model_input = build_pipeline_input(origin, destination, first_flight)
+
+                    #     if model_input:
+                    #         predicted_price = predict_price(**model_input)
+
+                    for flight in flights:
+                        model_input = build_pipeline_input(origin, destination, flight)
+                        predicted_price = None
 
                         if model_input:
                             predicted_price = predict_price(**model_input)
 
-                    suggestion_message = None
+                            if flight == flights[0]:
+                                first_predicted_price = predicted_price
 
-                    if live_stats and predicted_price is not None:
-                        current_price = live_stats.get("lowest_price")
-                        historical_avg = hist_stats.get("average_price") if hist_stats else None
-
-                        if current_price is not None:
-                            if current_price < predicted_price:
-                                suggestion_message = (
-                                    f"The current lowest live price is ${current_price:.2f}, "
-                                    f"which is below the model prediction of ${predicted_price:.2f}. "
-                                    f"This may be a good time to book."
-                                )
-                            elif current_price > predicted_price:
-                                suggestion_message = (
-                                    f"The current lowest live price is ${current_price:.2f}, "
-                                    f"which is above the model prediction of ${predicted_price:.2f}. "
-                                    f"You may want to monitor prices before booking."
-                                )
-                            else:
-                                suggestion_message = (
-                                    f"The current lowest live price is ${current_price:.2f}, "
-                                    f"which is very close to the model prediction."
-                                )
-
-                            if historical_avg is not None:
-                                if current_price < historical_avg:
-                                    suggestion_message += f" It is also below the historical average of ${historical_avg:.2f}."
-                                elif current_price > historical_avg:
-                                    suggestion_message += f" It is above the historical average of ${historical_avg:.2f}."
-
-
-                    for flight in flights:
                         card = collect_result_data(
                             origin=origin,
                             destination=destination,
                             flight=flight,
+                            predicted_price=predicted_price,
                         )
+
                         if card:
                             results.append(card)
+
+                    suggestion_message = None
+
+                    if live_stats and first_predicted_price is not None:
+                        current_price = live_stats.get("lowest_price")
+                        historical_avg = hist_stats.get("average_price") if hist_stats else None
+                        
+
+                        if current_price is not None:
+                            diff = current_price - first_predicted_price
+
+                            if abs(diff) <= MODEL_MAE:
+                                suggestion_message = f"The current price of the cheapest flight (${current_price:.2f}) is close to the predicted value (${first_predicted_price:.2f} ± ${MODEL_MAE:.2f}), which is within the model’s typical range, so there is no strong indication that the price is unusually high or low and booking now would be reasonable, though waiting may not lead to a significantly better price."
+
+                            elif diff < 0:
+                                suggestion_message = f"The current price of the cheapest flight (${current_price:.2f}) is ${abs(diff):.2f} below the predicted value (${first_predicted_price:.2f}), which is beyond the model’s typical range and suggests the price is relatively low, making this a good opportunity to book."
+
+                            else:
+                                suggestion_message = f"The current price of the cheapest flight (${current_price:.2f}) is ${diff:.2f} above the predicted value (${first_predicted_price:.2f}), which is higher than expected and may indicate relatively high pricing, so it could be worth monitoring before booking."
+
+                            if historical_avg is not None:
+                                if current_price < historical_avg:
+                                    suggestion_message += f" It is also below the historical average (${historical_avg:.2f}), reinforcing that this is a favorable price."
+                                elif current_price > historical_avg:
+                                    suggestion_message += f" It is also above the historical average (${historical_avg:.2f}), suggesting it may not be the most competitive price."
+
+
+                    # for flight in flights:
+                    #     card = collect_result_data(
+                    #         origin=origin,
+                    #         destination=destination,
+                    #         flight=flight,
+                    #     )
+                    #     if card:
+                    #         results.append(card)
 
             except ValueError:
                 error = "Please enter a valid departure date."
@@ -188,9 +205,10 @@ def flights_search_page(request):
             "origin": origin,
             "destination": destination,
             "results": results,
-            "predicted_price": predicted_price,
+            "predicted_price": first_predicted_price,
             "live_stats": live_stats,
             "hist_stats": hist_stats,
+            "mae": MODEL_MAE,
             "suggestion_message": suggestion_message,
             "error": error,
         },

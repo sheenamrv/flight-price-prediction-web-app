@@ -51,6 +51,7 @@ def get_season(month: int) -> str:
 #         return "3001-3500 km"
 #     return "3500+ km"
 
+# Generate a flight price prediction
 def predict_price(origin: str, destination: str, name_airline: str, departure_date, days_until_departure: int, trip_duration_minutes: int, number_of_stops: int, departure_hour: int, arrival_hour: int, departure_time_period: str, arrival_time_period: str) -> float:
     
     # Prep data 
