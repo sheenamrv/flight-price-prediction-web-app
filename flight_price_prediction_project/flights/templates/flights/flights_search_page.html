@@ -102,7 +102,10 @@
       >
         {{ error }}
       </div>
-      {% endif %} {% if predicted_price %}
+      {% endif %} 
+      
+      <!-- Predicted Price -->
+      {% if predicted_price %}
       <div class="max-w-5xl mx-auto mt-10">
         <div
           class="bg-white/10 backdrop-blur-md rounded-2xl p-8 shadow-lg text-center"
@@ -115,6 +118,16 @@
           </p>
         </div>
       </div>
+      {% endif %}
+
+      <!-- Suggestion Message - TO DO: can be improved -->
+      {% if suggestion_message %}
+        <div class="max-w-5xl mx-auto mt-6">
+          <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 shadow-lg">
+            <p class="text-lg font-semibold mb-2">Price Insight</p>
+            <p class="text-sm md:text-base">{{ suggestion_message }}</p>
+          </div>
+        </div>
       {% endif %}
 
       <!-- Stats -->

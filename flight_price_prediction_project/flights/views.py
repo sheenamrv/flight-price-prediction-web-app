@@ -103,6 +103,9 @@ def flights_search_page(request):
     error = None
     live_stats = None
     hist_stats = None
+    origin = None
+    destination = None
+    suggestion_message = None
 
     if request.method == "POST":
         origin = (request.POST.get("origin") or "").strip().upper()
@@ -132,6 +135,38 @@ def flights_search_page(request):
                         if model_input:
                             predicted_price = predict_price(**model_input)
 
+                    suggestion_message = None
+
+                    if live_stats and predicted_price is not None:
+                        current_price = live_stats.get("lowest_price")
+                        historical_avg = hist_stats.get("average_price") if hist_stats else None
+
+                        if current_price is not None:
+                            if current_price < predicted_price:
+                                suggestion_message = (
+                                    f"The current lowest live price is ${current_price:.2f}, "
+                                    f"which is below the model prediction of ${predicted_price:.2f}. "
+                                    f"This may be a good time to book."
+                                )
+                            elif current_price > predicted_price:
+                                suggestion_message = (
+                                    f"The current lowest live price is ${current_price:.2f}, "
+                                    f"which is above the model prediction of ${predicted_price:.2f}. "
+                                    f"You may want to monitor prices before booking."
+                                )
+                            else:
+                                suggestion_message = (
+                                    f"The current lowest live price is ${current_price:.2f}, "
+                                    f"which is very close to the model prediction."
+                                )
+
+                            if historical_avg is not None:
+                                if current_price < historical_avg:
+                                    suggestion_message += f" It is also below the historical average of ${historical_avg:.2f}."
+                                elif current_price > historical_avg:
+                                    suggestion_message += f" It is above the historical average of ${historical_avg:.2f}."
+
+
                     for flight in flights:
                         card = collect_result_data(
                             origin=origin,
@@ -150,10 +185,13 @@ def flights_search_page(request):
         request,
         "flights/flights_search_page.html",
         {
+            "origin": origin,
+            "destination": destination,
             "results": results,
             "predicted_price": predicted_price,
             "live_stats": live_stats,
             "hist_stats": hist_stats,
+            "suggestion_message": suggestion_message,
             "error": error,
         },
     )
