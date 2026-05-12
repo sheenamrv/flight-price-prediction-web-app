@@ -6,3 +6,11 @@ Booking flights has been around for years and yet it can be a tedious and expens
 
 The objectives are to develop a web application platform that allows users to search for flights using origin and destination airports, alongside their desired departure date. It will use an external API to gather live flight data. Then, a machine learning model will be used to predict flight prices. Furthermore, the results are ordered based on the ticket price. In addition, the user interface features a that shows live and historical analytics such as average, minimum and maximum prices, to allow for improved flight booking decisions. Lastly, search results will be stored in a database.
 
+## 🧰 Tech Stack
+| Category | Technologies |
+|---|---|
+| Backend | Python, Django, SQLite |
+| Machine Learning & Data Processing | scikit-learn, Pandas, Random Forest Regressor, joblib, .pkl model serialization |
+| APIs | SerpAPI, Amadeus API, REST APIs |
+| Frontend | HTML, Tailwind CSS, JavaScript |
+| Development Tools | Git, GitHub |
