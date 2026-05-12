@@ -14,3 +14,10 @@ Search results are organized based on ticket price and include both live and his
 | APIs | SerpAPI, Amadeus API, REST APIs |
 | Frontend | HTML, Tailwind CSS, JavaScript |
 | Development Tools | Git, GitHub |
+
+## Team Project
+This project was created with contributions from:
+
+- Sheena Verana 
+- Andrianna Wardill
+- Olamilekan Elegbede
